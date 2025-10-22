@@ -1,0 +1,26 @@
+/* Este archivo se sube a GitHub y se enlaza desde el index */
+.github-badge {
+    background: linear-gradient(45deg, #333, #666);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.validation-links {
+    margin-top: 20px;
+}
+
+.validation-links a {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background 0.3s ease;
+}
+
+.validation-links a:hover {
+    background: rgba(255,255,255,0.1);
+}
