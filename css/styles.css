@@ -37,3 +37,41 @@
         height: 200px;
     }
 }
+
+/* Estilos para manejo de imágenes locales */
+.image-preview {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+}
+
+.local-image-badge {
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    margin-left: 5px;
+}
+
+/* Asegurar que las imágenes se muestren correctamente */
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Loading para imágenes */
+.image-loading {
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}

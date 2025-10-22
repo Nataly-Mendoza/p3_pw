@@ -27,7 +27,7 @@ $(document).ready(function() {
             categoria: "Selecciona una categoría",
             imagen: {
                 required: "Selecciona una imagen",
-                accept: "Solo archivos de imagen"
+                accept: "Solo archivos de imagen (JPG, PNG, GIF, etc.)"
             },
             precio: {
                 number: "Solo números válidos",
@@ -43,16 +43,26 @@ $(document).ready(function() {
             $(element).addClass('is-valid').removeClass('is-invalid');
         },
         submitHandler: function(form) {
-            // Simular envío exitoso
-            alert('¡Obra agregada correctamente!');
-            form.reset();
-            $('.form-control').removeClass('is-valid');
-            return false; // Prevenir envío real para la práctica
+            // La función de submit ahora está manejada por el event listener
+            return false;
         }
     });
 
     // Validación en tiempo real
     $('input, select').on('blur', function() {
         $(this).valid();
+    });
+
+    // Preview de imagen seleccionada
+    $('#imagen').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Mostrar preview si quieres agregar esa funcionalidad
+                console.log('Imagen cargada:', file.name);
+            };
+            reader.readAsDataURL(file);
+        }
     });
 });

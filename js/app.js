@@ -8,26 +8,26 @@ createApp({
                 {
                     id: 1,
                     titulo: "Retrato Digital",
-                    descripcion: "Retrato estilo anime creado en Photoshop",
-                    imagen: "https://via.placeholder.com/400x300/667eea/white?text=Retrato+Digital",
+                    descripcion: "Retrato mona china",
+                    imagen: "assets/images/boots.jpg",
                     categoria: "digital",
                     tecnica: "Tableta Gráfica",
                     fecha: "2025-01-15"
                 },
                 {
                     id: 2,
-                    titulo: "Paisaje Nocturno",
-                    descripcion: "Paisaje urbano con efectos de luz",
-                    imagen: "https://via.placeholder.com/400x300/764ba2/white?text=Paisaje+Nocturno",
+                    titulo: "Bill Cipher baby",
+                    descripcion: "Bill Cipher en versión bebé",
+                    imagen: "assets/images/Billchikito.jpg",
                     categoria: "digital",
-                    tecnica: "Procreate",
+                    tecnica: "Tableta Gráfica",
                     fecha: "2025-01-10"
                 },
                 {
                     id: 3,
-                    titulo: "Sketch de Personaje",
+                    titulo: "Sketch de cositas turbias",
                     descripcion: "Diseño conceptual para videojuego",
-                    imagen: "https://via.placeholder.com/400x300/f093fb/white?text=Sketch+Personaje",
+                    imagen: "assets/images/Ilustración58.jpg",
                     categoria: "sketch",
                     tecnica: "Lápiz Digital",
                     fecha: "2025-01-08"
