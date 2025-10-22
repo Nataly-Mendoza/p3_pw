@@ -37,11 +37,7 @@ createApp({
         }
     },
     mounted() {
-        // Cargar datos del localStorage si existen
-        const datosGuardados = localStorage.getItem('galeriaObras');
-        if (datosGuardados) {
-            this.dibujos = JSON.parse(datosGuardados);
-        }
+        this.cargarDatosGuardados();
     },
     methods: {
         verDetalles(dibujo) {
@@ -50,8 +46,14 @@ createApp({
             modal.show();
         },
         
-        guardarDatos() {
-            localStorage.setItem('galeriaObras', JSON.stringify(this.dibujos));
+        cargarDatosGuardados() {
+            const datosGuardados = localStorage.getItem('galeriaObras');
+            if (datosGuardados) {
+                const obrasGuardadas = JSON.parse(datosGuardados);
+                // Combinar con las imágenes por defecto
+                this.dibujos = [...this.dibujos, ...obrasGuardadas];
+            }
         }
     }
 }).mount('#app');
+

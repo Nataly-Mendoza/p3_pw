@@ -8,7 +8,13 @@
     <link rel="stylesheet" href="../css/forms.css">
 </head>
 <body>
-    <div class="container mt-5">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">🎨 Volver a Galería</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -16,25 +22,58 @@
                         <h4>✏️ Editar Obra Existente</h4>
                     </div>
                     <div class="card-body">
-                        <form id="form-editar-obra" novalidate>
-                            <!-- Misma estructura que alta-obra.html pero con datos precargados -->
+                        <div class="mb-3">
+                            <label for="select-obra" class="form-label">Selecciona la obra a editar *</label>
+                            <select class="form-select" id="select-obra" required>
+                                <option value="">-- Selecciona una obra --</option>
+                            </select>
+                        </div>
+
+                        <form id="form-editar-obra" novalidate style="display: none;">
                             <div class="mb-3">
                                 <label for="titulo-editar" class="form-label">Título de la Obra *</label>
-                                <input type="text" class="form-control" id="titulo-editar" name="titulo" value="Retrato Digital" required>
+                                <input type="text" class="form-control" id="titulo-editar" name="titulo" required>
                                 <div class="invalid-feedback">Por favor ingresa un título válido</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion-editar" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion-editar" name="descripcion" rows="3"></textarea>
                             </div>
 
                             <div class="mb-3">
                                 <label for="categoria-editar" class="form-label">Categoría *</label>
                                 <select class="form-select" id="categoria-editar" name="categoria" required>
-                                    <option value="digital" selected>Arte Digital</option>
+                                    <option value="">Selecciona una categoría</option>
+                                    <option value="digital">Arte Digital</option>
                                     <option value="tradicional">Tradicional</option>
                                     <option value="sketch">Sketch</option>
+                                    <option value="personaje">Diseño de Personajes</option>
                                 </select>
+                                <div class="invalid-feedback">Por favor selecciona una categoría</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tecnica-editar" class="form-label">Técnica Utilizada</label>
+                                <input type="text" class="form-control" id="tecnica-editar" name="tecnica">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="precio-editar" class="form-label">Precio (MXN)</label>
+                                <input type="number" class="form-control" id="precio-editar" name="precio" min="0" step="0.01">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Vista previa de la imagen</label>
+                                <div>
+                                    <img id="imagen-preview" style="max-width: 200px; border-radius: 8px;">
+                                </div>
+                                <small class="text-muted">La imagen no se puede modificar</small>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-warning">Actualizar Obra</button>
+                                <button type="button" class="btn btn-danger" id="btn-eliminar">Eliminar Obra</button>
                                 <a href="../index.html" class="btn btn-secondary">Cancelar</a>
                             </div>
                         </form>
@@ -45,7 +84,130 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../js/validations.js"></script>
+    
+    <script>
+    // Cargar obras al seleccionar
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarObrasParaEditar();
+        
+        document.getElementById('select-obra').addEventListener('change', function() {
+            const obraId = this.value;
+            if (obraId) {
+                cargarDatosObra(obraId);
+                document.getElementById('form-editar-obra').style.display = 'block';
+            } else {
+                document.getElementById('form-editar-obra').style.display = 'none';
+            }
+        });
+
+        // Manejar edición
+        document.getElementById('form-editar-obra').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                actualizarObra();
+            } else {
+                this.classList.add('was-validated');
+            }
+        });
+
+        // Manejar eliminación
+        document.getElementById('btn-eliminar').addEventListener('click', function() {
+            const obraId = document.getElementById('select-obra').value;
+            if (obraId && confirm('¿Estás seguro de que quieres eliminar esta obra?')) {
+                eliminarObra(obraId);
+            }
+        });
+    });
+
+    function cargarObrasParaEditar() {
+        const select = document.getElementById('select-obra');
+        const todasLasObras = obtenerTodasLasObras();
+        
+        // Limpiar opciones excepto la primera
+        while (select.children.length > 1) {
+            select.removeChild(select.lastChild);
+        }
+        
+        // Agregar obras
+        todasLasObras.forEach(obra => {
+            const option = document.createElement('option');
+            option.value = obra.id;
+            option.textContent = obra.titulo;
+            select.appendChild(option);
+        });
+    }
+
+    function obtenerTodasLasObras() {
+        // Obtener obras por defecto
+        const obrasPorDefecto = [
+            { id: 1, titulo: "Retrato Digital" },
+            { id: 2, titulo: "Bill Cipher baby" },
+            { id: 3, titulo: "Sketch de cositas turbias" }
+        ];
+        
+        // Obtener obras guardadas
+        const obrasGuardadas = JSON.parse(localStorage.getItem('galeriaObras') || '[]');
+        
+        return [...obrasPorDefecto, ...obrasGuardadas];
+    }
+
+    function cargarDatosObra(obraId) {
+        const todasLasObras = obtenerTodasLasObras();
+        const obra = todasLasObras.find(o => o.id == obraId);
+        
+        if (obra) {
+            document.getElementById('titulo-editar').value = obra.titulo || '';
+            document.getElementById('descripcion-editar').value = obra.descripcion || '';
+            document.getElementById('categoria-editar').value = obra.categoria || '';
+            document.getElementById('tecnica-editar').value = obra.tecnica || '';
+            document.getElementById('precio-editar').value = obra.precio || '';
+            document.getElementById('imagen-preview').src = obra.imagen || '';
+        }
+    }
+
+    function actualizarObra() {
+        const obraId = document.getElementById('select-obra').value;
+        const todasLasObras = obtenerTodasLasObras();
+        const obraIndex = todasLasObras.findIndex(o => o.id == obraId);
+        
+        if (obraIndex !== -1) {
+            // Actualizar datos
+            todasLasObras[obraIndex].titulo = document.getElementById('titulo-editar').value;
+            todasLasObras[obraIndex].descripcion = document.getElementById('descripcion-editar').value;
+            todasLasObras[obraIndex].categoria = document.getElementById('categoria-editar').value;
+            todasLasObras[obraIndex].tecnica = document.getElementById('tecnica-editar').value;
+            todasLasObras[obraIndex].precio = document.getElementById('precio-editar').value;
+            
+            // Guardar cambios
+            guardarCambiosObras(todasLasObras);
+            alert('¡Obra actualizada correctamente!');
+            
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 1000);
+        }
+    }
+
+    function eliminarObra(obraId) {
+        const todasLasObras = obtenerTodasLasObras();
+        const obrasFiltradas = todasLasObras.filter(o => o.id != obraId);
+        
+        guardarCambiosObras(obrasFiltradas);
+        alert('¡Obra eliminada correctamente!');
+        
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 1000);
+    }
+
+    function guardarCambiosObras(obras) {
+        // Separar obras por defecto de las del usuario
+        const obrasPorDefecto = obras.filter(o => o.id <= 3);
+        const obrasUsuario = obras.filter(o => o.id > 3);
+        
+        // Guardar solo las del usuario en localStorage
+        localStorage.setItem('galeriaObras', JSON.stringify(obrasUsuario));
+    }
+    </script>
 </body>
 </html>
